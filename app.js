@@ -123,18 +123,21 @@ app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 })();
 
 // Routes
+let authRoutes, cartRouter, managerRouter, productRoutes;
 try {
-  const authRoutes = require("./routes/authRoutes");
-  const cartRouter = require("./routes/cartRoutes");
-  const managerRouter = require("./routes/managerRouters");
-  const productRoutes = require("./routes/productRoutes");
-  app.use("/api", authRoutes);
-  app.use("/api", cartRouter);
-  app.use("/api", managerRouter);
-  app.use("/api", productRoutes);
+  authRoutes = require("./routes/authRoutes");
+  cartRouter = require("./routes/cartRoutes");
+  managerRouter = require("./routes/managerRouters");
+  productRoutes = require("./routes/productRoutes");
 } catch (err) {
-  console.error("❌ Failed to load routes:", err.message);
+  console.error("❌ Failed to load routes:", err.message || err);
 }
+
+app.use("/api/auth", authRoutes);
+app.use("/api/cart", cartRouter);
+app.use("/api/manager", managerRouter);
+app.use("/api/product", productRoutes);
+
 
 // ✅ FCM token route for dealers
 app.post("/api/send-fcm-token", async (req, res) => {
