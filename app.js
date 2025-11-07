@@ -4,12 +4,11 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const path = require("path");
 const passport = require("passport");
-const swaggerUi = require("swagger-ui-express");
+
 
 dotenv.config();
 
 const connectDB = require("./config/db");
-const swaggerDocument = require("./swagger-output.json");
 
 const Dealer = require("./models/dealerModel"); // ✅ fixed model name
 const { authMiddleware, verifyGSTTokenMiddleware } = require("./middleware/authMiddleware");
@@ -49,14 +48,6 @@ app.use("/api/cart", cartRouter);
 app.use("/api/manager", managerRouter);
 app.use("/api/product", productRoutes);
 
-// Swagger (optional)
-try {
-  if (swaggerDocument) {
-    app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-  }
-} catch (err) {
-  console.warn("⚠️ Swagger setup failed:", err.message || err);
-}
 
 // ✅ FCM token route for dealers
 app.post("/api/send-fcm-token", async (req, res) => {
