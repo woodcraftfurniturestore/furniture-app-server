@@ -128,7 +128,6 @@ try {
   const cartRouter = require("./routes/cartRoutes");
   const managerRouter = require("./routes/managerRouters");
   const productRoutes = require("./routes/productRoutes");
-
   app.use("/api/auth", authRoutes);
   app.use("/api/cart", cartRouter);
   app.use("/api/manager", managerRouter);
