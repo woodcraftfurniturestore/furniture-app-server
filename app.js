@@ -123,7 +123,6 @@ app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 })();
 
 // Routes
-let authRoutes, cartRouter, managerRouter, productRoutes;
 try {
   authRoutes = require("./routes/authRoutes");
   cartRouter = require("./routes/cartRoutes");
