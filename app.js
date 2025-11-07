@@ -128,10 +128,10 @@ try {
   const cartRouter = require("./routes/cartRoutes");
   const managerRouter = require("./routes/managerRouters");
   const productRoutes = require("./routes/productRoutes");
-  app.use("/api/auth", authRoutes);
-  app.use("/api/cart", cartRouter);
-  app.use("/api/manager", managerRouter);
-  app.use("/api/product", productRoutes);
+  app.use("/api", authRoutes);
+  app.use("/api", cartRouter);
+  app.use("/api", managerRouter);
+  app.use("/api", productRoutes);
 } catch (err) {
   console.error("❌ Failed to load routes:", err.message);
 }
