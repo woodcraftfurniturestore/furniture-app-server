@@ -1,0 +1,55 @@
+const admin = require("../firebaseConfig");
+const Order = require("../models/order");
+const Notification = require("../models/notificationModel");
+const sendNotificationHelper = async ({ orderId, title, body, icon, page }) => {
+    try {
+        console.log("Sending Notification:", { orderId, title, body, icon, page });
+        const order = await Order.findById(orderId).populate("user");
+        if (!order) {
+            console.log("Order not found.");
+            return { success: false, message: "Order not found." };
+        }
+        const user = order.user;
+        if (!user || !user.fcmTokens || user.fcmTokens.length === 0) {
+            console.log("User not found or no valid FCM tokens.");
+            return { success: false, message: "User not found or no valid FCM tokens." };
+        }
+        const messages = user.fcmTokens.map((token) => ({
+            notification: {
+                title: title,
+                body: body,
+            },
+            android: {
+                notification: {
+                    icon: icon || "ic_notification",
+                    click_action: "FLUTTER_NOTIFICATION_CLICK",
+                },
+                priority: "high",
+            },
+            data: {
+                page: `/order-details/${orderId.toString()}`, 
+                orderId: orderId.toString(),
+                userId: user._id.toString(),
+            },
+            token,
+        }));
+        const responses = await Promise.all(
+            messages.map((message) => admin.messaging().send(message))
+        );
+        console.log("Notification sent successfully.");
+        await new Notification({
+            title,
+            body,
+            icon: icon || "ic_notification",
+            page: `/order-details/${orderId.toString()}`,
+            orderId: orderId.toString(),
+            userId: user._id,
+            date: new Date(),
+        }).save();
+        return { success: true, results: responses };
+    } catch (error) {
+        console.error("Notification Error:", error);
+        return { success: false, error: error.message };
+    }
+};
+module.exports = sendNotificationHelper;
