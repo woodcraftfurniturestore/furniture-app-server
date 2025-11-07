@@ -84,7 +84,7 @@ app.post("/api/send-fcm-token", async (req, res) => {
 
 // Root route
 app.get("/", (req, res) => {
-  res.status(200).send("✅ Hello from Vercel Node.js backend!");
+  res.status(200).send("✅ Furniture Backend Running Successfully!");
 });
 
 // 404
